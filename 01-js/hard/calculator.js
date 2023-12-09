@@ -19,3 +19,5 @@
 class Calculator {}
 
 module.exports = Calculator;
+
+setTimeout

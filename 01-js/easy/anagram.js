@@ -6,6 +6,20 @@
 
 function isAnagram(str1, str2) {
 
+  if(str1.length !== str2.length){
+    return false;
+  }
+
+  str2 = str2.toLowerCase().split("").sort().join("");
+  str1 = str1.toLowerCase().split("").sort().join("");
+
+  let string2 = str2+str2;
+
+  if(string2.includes(str1)){
+    return true;
+  }
+
+  return false;
 }
 
 module.exports = isAnagram;
