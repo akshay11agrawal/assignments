@@ -43,6 +43,7 @@
   const bodyParser = require('body-parser');
   const app = express();
   app.use(express.json());
+  app.use(bodyParser.json());
 
   let id = 1;
   let toDoList =[]; 
@@ -62,8 +63,8 @@
     createTodo("take notes","take offline video notes");
     createTodo("buy screenguard","go to market and buy screenguard");  
   }
-
-  createToDos();
+  //uncomment to manually test the results
+  //createToDos();
 
   //APIs
 
@@ -117,6 +118,5 @@
   return res.status(500).json({"message":"Internal server error while processing your request"});
   });
   
-app.use(bodyParser.json());
-app.listen(3000);
+
 module.exports = app;
