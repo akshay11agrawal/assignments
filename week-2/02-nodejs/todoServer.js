@@ -43,6 +43,33 @@
   const bodyParser = require('body-parser');
   
   const app = express();
+
+  let id = 1;
+  let toDoList =[]; 
+
+  function createTodo(title, description){
+    let tempObj = {
+    "id" : id,
+    "title" :title,
+    "description" : description
+    };
+    toDoList.push(tempObj);
+    id++;
+  };
+
+  function createToDos(){
+    createTodo("get a coffee","have a nice hot coffee");
+    createTodo("take notes","take offline video notes");
+    createTodo("buy screenguard","go to market and buy screenguard");  
+  }
+
+  createToDos();
+
+  
+  console.log(toDoList);
+  console.log('Array size is ' +toDoList.length);
+  console.log(id);
+
   
   app.use(bodyParser.json());
   
