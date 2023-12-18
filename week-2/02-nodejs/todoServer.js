@@ -41,17 +41,17 @@
  */
   const express = require('express');
   const bodyParser = require('body-parser');
-  
   const app = express();
+  app.use(express.json());
 
   let id = 1;
   let toDoList =[]; 
 
   function createTodo(title, description){
     let tempObj = {
-    "id" : id,
-    "title" :title,
-    "description" : description
+    id : id,
+    title :title,
+    description : description
     };
     toDoList.push(tempObj);
     id++;
@@ -65,12 +65,58 @@
 
   createToDos();
 
-  
-  console.log(toDoList);
-  console.log('Array size is ' +toDoList.length);
-  console.log(id);
+  //APIs
 
+  app.get("/todos",function(req,res){
+    return res.status(200).json(toDoList);
+  });
   
-  app.use(bodyParser.json());
+  app.get("/todos/:id",function(req,res){
+    let reqId = Number(req.params.id);
+    let filteredId = toDoList.find(todo => todo.id === reqId);
+   
+    if(filteredId!= undefined){
+      return res.status(200).json(filteredId);
+    }
+    return res.status(404).json({"message":"Given todo could not be found"});
+  });
+
+  app.post("/todos",function(req,res){
+    let newObject = req.body;
+    let currentId = id;
+
+    if(newObject !== undefined){
+      createTodo(newObject.title,newObject.description);
+      return res.status(201).json({'id':currentId});
+    }
+  return res.status(500).json({"message":"Internal server error while processing your request"});    
+  });
+
+  app.put("/todos/:id",function(req,res){
+    let reqId = Number(req.params.id);
+    let reqBody = req.body;
+
+    let filteredId = toDoList.find(todo => todo.id === reqId);
+   
+    if(filteredId!= undefined){
+      filteredId.title = reqBody.title;
+      filteredId.description = reqBody.description;
+      return res.status(200).json(filteredId);
+    }
+    return res.status(404).json({"message":"Given todo could not be found"});
+  });
+
+  app.delete("/todos/:id",function(req,res){
+    let reqId = Number(req.params.id);
+    toDoList = toDoList.filter(todo => todo.id !== reqId);
+
+    if(toDoList !== undefined){
+      id--;
+      return res.status(200).json({'message':'Todo ID '+reqId + ' is deleted'});
+    }
+  return res.status(500).json({"message":"Internal server error while processing your request"});
+  });
   
-  module.exports = app;
+app.use(bodyParser.json());
+app.listen(3000);
+module.exports = app;
